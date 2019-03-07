@@ -36,6 +36,16 @@ module "flux-bootstrap" {
 ```
 
 
+## FAQ
+
+#### What about the Flux Helm Operator
+
+The easiest thing to do is to add the [manifests][4] for the Helm Operator to
+your flux config repo. This way, once Flux is up and running it will
+automatically deploy the Helm component! You can also deploy Tiller like this!
+
+
 [1]: https://github.com/weaveworks/flux/
 [2]: https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys
 [3]: https://aws.amazon.com/eks/
+[4]: https://github.com/weaveworks/flux/tree/master/deploy-helm
