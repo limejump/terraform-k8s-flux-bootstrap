@@ -1,7 +1,7 @@
 # terraform-k8s-flux-bootstrap
 
-This Terraform module will bootstrap [Weaveworks Flux][1] on a Kubernetes cluster
-by doing the following things:
+This Terraform module will bootstrap [Weaveworks Flux][1] on a Kubernetes
+cluster by doing the following things:
 
 - Create an RSA key to be used by Flux
 - Store the private key as a Kubernetes Secret
@@ -13,7 +13,8 @@ by doing the following things:
 
 - Only supports Github for the config repo (and may only work for org repos)
 - Assumes the Kubernetes is an Amazon [EKS][3] cluster
-- Only supports deploying to the 'flux' namespace (but will be automatically created)
+- Only supports deploying to the 'flux' namespace (but will be
+    automatically created)
 
 
 ## Usage
