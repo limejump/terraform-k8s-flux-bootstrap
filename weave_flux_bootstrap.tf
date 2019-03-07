@@ -47,6 +47,7 @@ resource "kubernetes_service_account" "flux" {
 resource "kubernetes_cluster_role" "flux" {
   metadata {
     name = "flux"
+
     labels {
       name = "flux"
     }
@@ -69,6 +70,7 @@ resource "kubernetes_cluster_role" "flux" {
 resource "kubernetes_cluster_role_binding" "flux" {
   metadata {
     name = "flux"
+
     labels {
       name = "flux"
     }
@@ -108,7 +110,7 @@ resource "kubernetes_deployment" "flux" {
     }
 
     strategy {
-      type = "Recreate"
+      type           = "Recreate"
       rolling_update = {}
     }
 
