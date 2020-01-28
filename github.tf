@@ -8,6 +8,7 @@ resource "tls_private_key" "flux" {
 
 provider "github" {
   organization = "${var.github_org_name}"
+  base_url     = "${var.github_base_url}"
 }
 
 data "github_repository" "flux-repo" {
