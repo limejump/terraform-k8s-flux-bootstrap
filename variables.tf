@@ -14,3 +14,9 @@ variable "github_org_name" {
 variable "github_repository_name" {
   description = "Name of the Github repository for Flux"
 }
+
+variable "flux_known_hosts" {
+  description = "Set of hosts and their public ssh keys to mount into `/root/.ssh/known_hosts`"
+  type        = set(string)
+  default     = []
+}

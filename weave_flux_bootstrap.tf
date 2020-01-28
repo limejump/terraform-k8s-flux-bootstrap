@@ -96,6 +96,20 @@ resource "kubernetes_cluster_role_binding" "flux" {
   ]
 }
 
+resource "kubernetes_config_map" "root_sshdir" {
+  metadata {
+    name = "flux-root-sshdir"
+    namespace = local.k8s-ns
+
+    labels = {
+      name = "flux"
+    }
+  }
+  data = {
+    "known_hosts" = join("\n", var.flux_known_hosts)
+  }
+}
+
 resource "kubernetes_deployment" "flux" {
   metadata {
     name      = "flux"
@@ -150,6 +164,14 @@ resource "kubernetes_deployment" "flux" {
           }
         }
 
+        volume {
+          name = "root-sshdir"
+          config_map {
+            name = kubernetes_config_map.root_sshdir.metadata[0].name
+            default_mode = "0600"
+          }
+        }
+
         container {
           name  = "flux"
           image = "weaveworks/flux:1.10.1"
@@ -171,6 +193,12 @@ resource "kubernetes_deployment" "flux" {
           volume_mount {
             name       = "git-keygen"
             mount_path = "/var/fluxd/keygen"
+          }
+
+          volume_mount {
+            name       = "root-sshdir"
+            mount_path = "/root/.ssh"
+            read_only  = true
           }
 
           args = [
