@@ -19,6 +19,10 @@ provider "kubernetes" {
 
 locals {
   k8s-ns = "flux"
+  flux_additional_arguments = [
+    for key in keys(var.flux_args_extra) :
+    "--${key}=${var.flux_args_extra[key]}"
+  ]
 }
 
 resource "kubernetes_namespace" "flux" {
@@ -98,7 +102,7 @@ resource "kubernetes_cluster_role_binding" "flux" {
 
 resource "kubernetes_config_map" "root_sshdir" {
   metadata {
-    name = "flux-root-sshdir"
+    name      = "flux-root-sshdir"
     namespace = local.k8s-ns
 
     labels = {
@@ -167,7 +171,7 @@ resource "kubernetes_deployment" "flux" {
         volume {
           name = "root-sshdir"
           config_map {
-            name = kubernetes_config_map.root_sshdir.metadata[0].name
+            name         = kubernetes_config_map.root_sshdir.metadata[0].name
             default_mode = "0600"
           }
         }
@@ -201,12 +205,12 @@ resource "kubernetes_deployment" "flux" {
             read_only  = true
           }
 
-          args = [
+          args = concat([
             "--memcached-service=memcached",
             "--ssh-keygen-dir=/var/fluxd/keygen",
             "--git-url=${data.github_repository.flux-repo.ssh_clone_url}",
-            "--git-branch=master",
-          ]
+            "--git-branch=${var.github_repository_branch}",
+          ], local.flux_additional_arguments)
         }
       }
     }
