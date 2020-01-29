@@ -3,17 +3,17 @@
 # repository will be automatically applied when the cluster is created.
 
 data "aws_eks_cluster" "cluster" {
-  name = "${var.eks_cluster_name}"
+  name = var.eks_cluster_name
 }
 
 data "aws_eks_cluster_auth" "cluster" {
-  name = "${var.eks_cluster_name}"
+  name = var.eks_cluster_name
 }
 
 provider "kubernetes" {
-  host                   = "${data.aws_eks_cluster.cluster.endpoint}"
-  cluster_ca_certificate = "${base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)}"
-  token                  = "${data.aws_eks_cluster_auth.cluster.token}"
+  host                   = data.aws_eks_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
   load_config_file       = false
 }
 
@@ -23,32 +23,32 @@ locals {
 
 resource "kubernetes_namespace" "flux" {
   metadata {
-    name = "${local.k8s-ns}"
+    name = local.k8s-ns
   }
 
-  depends_on = ["kubernetes_namespace.flux"]
+  depends_on = [kubernetes_namespace.flux]
 }
 
 resource "kubernetes_service_account" "flux" {
   metadata {
     name      = "flux"
-    namespace = "${local.k8s-ns}"
+    namespace = local.k8s-ns
 
-    labels {
+    labels = {
       name = "flux"
     }
   }
 
   automount_service_account_token = true
 
-  depends_on = ["kubernetes_namespace.flux"]
+  depends_on = [kubernetes_namespace.flux]
 }
 
 resource "kubernetes_cluster_role" "flux" {
   metadata {
     name = "flux"
 
-    labels {
+    labels = {
       name = "flux"
     }
   }
@@ -64,14 +64,14 @@ resource "kubernetes_cluster_role" "flux" {
     verbs             = ["*"]
   }
 
-  depends_on = ["kubernetes_namespace.flux"]
+  depends_on = [kubernetes_namespace.flux]
 }
 
 resource "kubernetes_cluster_role_binding" "flux" {
   metadata {
     name = "flux"
 
-    labels {
+    labels = {
       name = "flux"
     }
   }
@@ -85,38 +85,37 @@ resource "kubernetes_cluster_role_binding" "flux" {
   subject {
     kind      = "ServiceAccount"
     name      = "flux"
-    namespace = "${local.k8s-ns}"
+    namespace = local.k8s-ns
     api_group = ""
   }
 
   depends_on = [
-    "kubernetes_namespace.flux",
-    "kubernetes_cluster_role.flux",
-    "kubernetes_service_account.flux",
+    kubernetes_namespace.flux,
+    kubernetes_cluster_role.flux,
+    kubernetes_service_account.flux,
   ]
 }
 
 resource "kubernetes_deployment" "flux" {
   metadata {
     name      = "flux"
-    namespace = "${local.k8s-ns}"
+    namespace = local.k8s-ns
   }
 
   spec {
     selector {
-      match_labels {
+      match_labels = {
         name = "flux"
       }
     }
 
     strategy {
-      type           = "Recreate"
-      rolling_update = {}
+      type = "Recreate"
     }
 
     template {
       metadata {
-        labels {
+        labels = {
           name = "flux"
         }
       }
@@ -127,10 +126,10 @@ resource "kubernetes_deployment" "flux" {
         # See the following GH issue for why we have to do this manually
         # https://github.com/terraform-providers/terraform-provider-kubernetes/issues/38
         volume {
-          name = "${kubernetes_service_account.flux.default_secret_name}"
+          name = kubernetes_service_account.flux.default_secret_name
 
           secret {
-            secret_name = "${kubernetes_service_account.flux.default_secret_name}"
+            secret_name = kubernetes_service_account.flux.default_secret_name
           }
         }
 
@@ -139,7 +138,7 @@ resource "kubernetes_deployment" "flux" {
 
           secret {
             secret_name  = "flux-git-deploy"
-            default_mode = 0400
+            default_mode = "0400"
           }
         }
 
@@ -159,7 +158,7 @@ resource "kubernetes_deployment" "flux" {
           # https://github.com/terraform-providers/terraform-provider-kubernetes/issues/38
           volume_mount {
             mount_path = "/var/run/secrets/kubernetes.io/serviceaccount"
-            name       = "${kubernetes_service_account.flux.default_secret_name}"
+            name       = kubernetes_service_account.flux.default_secret_name
             read_only  = true
           }
 
@@ -186,42 +185,42 @@ resource "kubernetes_deployment" "flux" {
   }
 
   depends_on = [
-    "kubernetes_cluster_role_binding.flux",
-    "kubernetes_secret.flux-git-deploy",
+    kubernetes_cluster_role_binding.flux,
+    kubernetes_secret.flux-git-deploy,
   ]
 }
 
 resource "kubernetes_secret" "flux-git-deploy" {
   metadata {
     name      = "flux-git-deploy"
-    namespace = "${local.k8s-ns}"
+    namespace = local.k8s-ns
   }
 
   type = "Opaque"
 
-  data {
-    identity = "${tls_private_key.flux.private_key_pem}"
+  data = {
+    identity = tls_private_key.flux.private_key_pem
   }
 
-  depends_on = ["kubernetes_namespace.flux"]
+  depends_on = [kubernetes_namespace.flux]
 }
 
 resource "kubernetes_deployment" "memcached" {
   metadata {
     name      = "memcached"
-    namespace = "${local.k8s-ns}"
+    namespace = local.k8s-ns
   }
 
   spec {
     selector {
-      match_labels {
+      match_labels = {
         name = "memcached"
       }
     }
 
     template {
       metadata {
-        labels {
+        labels = {
           name = "memcached"
         }
       }
@@ -240,13 +239,13 @@ resource "kubernetes_deployment" "memcached" {
     }
   }
 
-  depends_on = ["kubernetes_namespace.flux"]
+  depends_on = [kubernetes_namespace.flux]
 }
 
 resource "kubernetes_service" "memcached" {
   metadata {
     name      = "memcached"
-    namespace = "${local.k8s-ns}"
+    namespace = local.k8s-ns
   }
 
   spec {
@@ -255,10 +254,10 @@ resource "kubernetes_service" "memcached" {
       port = 11211
     }
 
-    selector {
+    selector = {
       name = "memcached"
     }
   }
 
-  depends_on = ["kubernetes_namespace.flux"]
+  depends_on = [kubernetes_namespace.flux]
 }

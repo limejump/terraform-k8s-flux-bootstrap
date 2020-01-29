@@ -7,16 +7,18 @@ resource "tls_private_key" "flux" {
 }
 
 provider "github" {
-  organization = "${var.github_org_name}"
+  organization = var.github_org_name
+  base_url     = var.github_base_url
 }
 
 data "github_repository" "flux-repo" {
-  name = "${var.github_repository_name}"
+  name = var.github_repository_name
 }
 
 resource "github_repository_deploy_key" "flux" {
   title      = "Flux deploy key (eks-${var.eks_cluster_name})"
-  repository = "${data.github_repository.flux-repo.name}"
+  repository = data.github_repository.flux-repo.name
   read_only  = false
-  key        = "${tls_private_key.flux.public_key_openssh}"
+  key        = tls_private_key.flux.public_key_openssh
 }
+
