@@ -111,8 +111,6 @@ resource "kubernetes_deployment" "flux" {
 
     strategy {
       type = "Recreate"
-      rolling_update {
-      }
     }
 
     template {
