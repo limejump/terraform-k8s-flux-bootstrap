@@ -178,7 +178,7 @@ resource "kubernetes_deployment" "flux" {
 
         container {
           name  = "flux"
-          image = "weaveworks/flux:1.10.1"
+          image = "weaveworks/flux:${var.flux_docker_tag}"
 
           # See the following GH issue for why we have to do this manually
           # https://github.com/terraform-providers/terraform-provider-kubernetes/issues/38

@@ -21,6 +21,12 @@ variable "github_repository_branch" {
   default     = "master"
 }
 
+variable "flux_docker_tag" {
+  description = "Tag of flux Docker image to pull"
+  type        = string
+  default     = "1.10.1"
+}
+
 variable "flux_known_hosts" {
   description = "Set of hosts and their public ssh keys to mount into `/root/.ssh/known_hosts`"
   type        = set(string)
