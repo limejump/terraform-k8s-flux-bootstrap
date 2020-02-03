@@ -19,6 +19,10 @@ provider "kubernetes" {
 
 locals {
   k8s-ns = "flux"
+  flux_additional_arguments = [
+    for key in keys(var.flux_args_extra) :
+    "--${key}=${var.flux_args_extra[key]}"
+  ]
 }
 
 resource "kubernetes_namespace" "flux" {
@@ -96,6 +100,20 @@ resource "kubernetes_cluster_role_binding" "flux" {
   ]
 }
 
+resource "kubernetes_config_map" "root_sshdir" {
+  metadata {
+    name      = "flux-root-sshdir"
+    namespace = local.k8s-ns
+
+    labels = {
+      name = "flux"
+    }
+  }
+  data = {
+    "known_hosts" = join("\n", var.flux_known_hosts)
+  }
+}
+
 resource "kubernetes_deployment" "flux" {
   metadata {
     name      = "flux"
@@ -116,6 +134,7 @@ resource "kubernetes_deployment" "flux" {
     template {
       metadata {
         labels = {
+          app = "flux"
           name = "flux"
         }
       }
@@ -150,9 +169,17 @@ resource "kubernetes_deployment" "flux" {
           }
         }
 
+        volume {
+          name = "root-sshdir"
+          config_map {
+            name         = kubernetes_config_map.root_sshdir.metadata[0].name
+            default_mode = "0600"
+          }
+        }
+
         container {
           name  = "flux"
-          image = "quay.io/weaveworks/flux:1.10.1"
+          image = "docker.io/fluxcd/flux:${var.flux_docker_tag}"
 
           # See the following GH issue for why we have to do this manually
           # https://github.com/terraform-providers/terraform-provider-kubernetes/issues/38
@@ -173,12 +200,18 @@ resource "kubernetes_deployment" "flux" {
             mount_path = "/var/fluxd/keygen"
           }
 
-          args = [
+          volume_mount {
+            name       = "root-sshdir"
+            mount_path = "/root/.ssh"
+            read_only  = true
+          }
+
+          args = concat([
             "--memcached-service=memcached",
             "--ssh-keygen-dir=/var/fluxd/keygen",
             "--git-url=${data.github_repository.flux-repo.ssh_clone_url}",
-            "--git-branch=master",
-          ]
+            "--git-branch=${var.github_repository_branch}",
+          ], local.flux_additional_arguments)
         }
       }
     }
