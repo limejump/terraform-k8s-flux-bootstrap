@@ -14,3 +14,27 @@ variable "github_org_name" {
 variable "github_repository_name" {
   description = "Name of the Github repository for Flux"
 }
+
+variable "github_repository_branch" {
+  description = "Branch to use as the upstream GitOps reference"
+  type        = string
+  default     = "master"
+}
+
+variable "flux_docker_tag" {
+  description = "Tag of flux Docker image to pull"
+  type        = string
+  default     = "1.17.1"
+}
+
+variable "flux_known_hosts" {
+  description = "Set of hosts and their public ssh keys to mount into `/root/.ssh/known_hosts`"
+  type        = set(string)
+  default     = []
+}
+
+variable "flux_args_extra" {
+  description = "Mapping of additional arguments to provide to the flux daemon"
+  type        = map(string)
+  default     = {}
+}
