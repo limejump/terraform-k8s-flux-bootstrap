@@ -38,3 +38,9 @@ variable "flux_args_extra" {
   type        = map(string)
   default     = {}
 }
+
+variable "private_key_pem" {
+  description = "Alternative Private Key for Flux to use when polling git via ssh"
+  type        = string
+  default     = null
+}

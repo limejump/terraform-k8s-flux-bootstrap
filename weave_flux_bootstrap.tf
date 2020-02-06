@@ -232,7 +232,7 @@ resource "kubernetes_secret" "flux-git-deploy" {
   type = "Opaque"
 
   data = {
-    identity = tls_private_key.flux.private_key_pem
+    identity = length(tls_private_key.flux) > 0 ? tls_private_key.flux[0].private_key_pem : var.private_key_pem
   }
 
   depends_on = [kubernetes_namespace.flux]
