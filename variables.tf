@@ -24,7 +24,7 @@ variable "github_repository_branch" {
 variable "flux_docker_tag" {
   description = "Tag of flux Docker image to pull"
   type        = string
-  default     = "1.17.1"
+  default     = "1.18.0"
 }
 
 variable "flux_known_hosts" {
