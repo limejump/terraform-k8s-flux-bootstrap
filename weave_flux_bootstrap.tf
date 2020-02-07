@@ -134,7 +134,7 @@ resource "kubernetes_deployment" "flux" {
     template {
       metadata {
         labels = {
-          app = "flux"
+          app  = "flux"
           name = "flux"
         }
       }
