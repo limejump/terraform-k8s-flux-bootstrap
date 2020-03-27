@@ -118,6 +118,10 @@ resource "kubernetes_deployment" "flux" {
   metadata {
     name      = "flux"
     namespace = local.k8s-ns
+    labels = {
+      app  = "flux"
+      name = "flux"
+    }
   }
 
   spec {
@@ -134,7 +138,7 @@ resource "kubernetes_deployment" "flux" {
     template {
       metadata {
         labels = {
-          app = "flux"
+          app  = "flux"
           name = "flux"
         }
       }
