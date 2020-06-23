@@ -112,6 +112,10 @@ resource "kubernetes_config_map" "root_sshdir" {
   data = {
     "known_hosts" = join("\n", var.flux_known_hosts)
   }
+
+  depends_on = [
+    kubernetes_namespace.flux,
+  ]
 }
 
 resource "kubernetes_deployment" "flux" {
