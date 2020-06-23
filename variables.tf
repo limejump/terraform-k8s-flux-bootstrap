@@ -44,3 +44,9 @@ variable "private_key_pem" {
   type        = string
   default     = null
 }
+
+variable "deploy_memcached" {
+  description = "If true, deploy memcached for use with flux registry scanning"
+  type        = bool
+  default     = true
+}
