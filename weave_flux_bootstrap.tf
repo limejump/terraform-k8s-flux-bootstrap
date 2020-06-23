@@ -211,7 +211,7 @@ resource "kubernetes_deployment" "flux" {
           }
 
           args = concat([
-            "--memcached-service=memcached",
+            "${var.deploy_memcached ? "--memcached-service=memcached" : "--registry-disable-scanning"}",
             "--ssh-keygen-dir=/var/fluxd/keygen",
             "--git-url=${data.github_repository.flux-repo.ssh_clone_url}",
             "--git-branch=${var.github_repository_branch}",
@@ -243,6 +243,8 @@ resource "kubernetes_secret" "flux-git-deploy" {
 }
 
 resource "kubernetes_deployment" "memcached" {
+  count = var.deploy_memcached ? 1 : 0
+
   metadata {
     name      = "memcached"
     namespace = local.k8s-ns
@@ -280,6 +282,8 @@ resource "kubernetes_deployment" "memcached" {
 }
 
 resource "kubernetes_service" "memcached" {
+  count = var.deploy_memcached ? 1 : 0
+
   metadata {
     name      = "memcached"
     namespace = local.k8s-ns
