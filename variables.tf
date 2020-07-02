@@ -50,3 +50,24 @@ variable "deploy_memcached" {
   type        = bool
   default     = true
 }
+
+variable "flux_deployment_annotations" {
+  description = "Optional annotations to apply to the Flux deployment"
+  type        = map(string)
+  default     = {}
+}
+
+variable "flux_deployment_labels" {
+  description = "Optional labels to apply to the Flux deployment"
+  type        = map(string)
+  default = {
+    app  = "flux"
+    name = "flux"
+  }
+}
+
+variable "memcached_docker_tag" {
+  description = "Tag of memcached Docker image to pull"
+  type        = string
+  default     = "1.4.25"
+}
