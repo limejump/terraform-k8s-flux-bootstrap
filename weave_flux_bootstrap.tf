@@ -122,10 +122,7 @@ resource "kubernetes_deployment" "flux" {
   metadata {
     name      = "flux"
     namespace = local.k8s-ns
-    labels = {
-      app  = "flux"
-      name = "flux"
-    }
+    labels    = var.flux_deployment_labels
   }
 
   spec {
@@ -141,10 +138,8 @@ resource "kubernetes_deployment" "flux" {
 
     template {
       metadata {
-        labels = {
-          app  = "flux"
-          name = "flux"
-        }
+        labels      = var.flux_deployment_labels
+        annotations = var.flux_deployment_annotations
       }
 
       spec {
@@ -271,7 +266,7 @@ resource "kubernetes_deployment" "memcached" {
       spec {
         container {
           name  = "memcached"
-          image = "memcached:1.4.25"
+          image = "memcached:${var.memcached_docker_tag}"
 
           port {
             name           = "clients"
