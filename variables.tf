@@ -66,6 +66,55 @@ variable "flux_deployment_labels" {
   }
 }
 
+variable "flux_liveness_probe" {
+  description = "Optional spec for the deployment liveness probe"
+  default = {
+    failure_threshold     = 3
+    initial_delay_seconds = 5
+    period_seconds        = 10
+    success_threshold     = 1
+    timeout_seconds       = 5
+
+    http_get = {
+      path   = "/api/flux/v6/identity.pub"
+      port   = 3030
+      scheme = "HTTP"
+    }
+  }
+}
+
+variable "flux_readiness_probe" {
+  description = "Optional spec for the deployment readiness probe"
+  default = {
+    failure_threshold     = 3
+    initial_delay_seconds = 5
+    period_seconds        = 10
+    success_threshold     = 1
+    timeout_seconds       = 5
+
+    http_get = {
+      path   = "/api/flux/v6/identity.pub"
+      port   = 3030
+      scheme = "HTTP"
+    }
+  }
+}
+
+variable "flux_port" {
+  description = "Port spec for Flux deployment"
+  type = object({
+    container_port = number
+    host_port      = number
+    protocol       = string
+  })
+
+  default = {
+    container_port = 3030
+    host_port      = 0
+    protocol       = "TCP"
+  }
+}
+
 variable "memcached_docker_tag" {
   description = "Tag of memcached Docker image to pull"
   type        = string

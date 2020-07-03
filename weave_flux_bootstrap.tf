@@ -215,6 +215,51 @@ resource "kubernetes_deployment" "flux" {
             "--git-url=${data.github_repository.flux-repo.ssh_clone_url}",
             "--git-branch=${var.github_repository_branch}",
           ], local.flux_additional_arguments)
+
+          liveness_probe {
+            failure_threshold     = 3
+            initial_delay_seconds = 5
+            period_seconds        = 10
+            success_threshold     = 1
+            timeout_seconds       = 5
+
+            http_get {
+              path   = "/api/flux/v6/identity.pub"
+              port   = 3030
+              scheme = "HTTP"
+            }
+          }
+
+          readiness_probe {
+            failure_threshold     = 3
+            initial_delay_seconds = 5
+            period_seconds        = 10
+            success_threshold     = 1
+            timeout_seconds       = 5
+
+            http_get {
+              path   = "/api/flux/v6/identity.pub"
+              port   = 3030
+              scheme = "HTTP"
+            }
+          }
+
+          port {
+            container_port = 3030
+            host_port      = 0
+            protocol       = "TCP"
+          }
+
+          resources {
+            limits {
+              cpu    = "1"
+              memory = "1Gi"
+            }
+            requests {
+              cpu    = "250m"
+              memory = "1Gi"
+            }
+          }
         }
       }
     }
