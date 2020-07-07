@@ -215,6 +215,51 @@ resource "kubernetes_deployment" "flux" {
             "--git-url=${data.github_repository.flux-repo.ssh_clone_url}",
             "--git-branch=${var.github_repository_branch}",
           ], local.flux_additional_arguments)
+
+          liveness_probe {
+            failure_threshold     = var.flux_liveness_probe_failure_threshold
+            initial_delay_seconds = var.flux_liveness_probe_initial_delay_seconds
+            period_seconds        = var.flux_liveness_probe_period_seconds
+            success_threshold     = var.flux_liveness_probe_success_threshold
+            timeout_seconds       = var.flux_liveness_probe_timeout_seconds
+
+            http_get {
+              path   = var.flux_liveness_probe_http_get_path
+              port   = var.flux_liveness_probe_http_get_port
+              scheme = var.flux_liveness_probe_http_get_scheme
+            }
+          }
+
+          readiness_probe {
+            failure_threshold     = var.flux_readiness_probe_failure_threshold
+            initial_delay_seconds = var.flux_readiness_probe_initial_delay_seconds
+            period_seconds        = var.flux_readiness_probe_period_seconds
+            success_threshold     = var.flux_readiness_probe_success_threshold
+            timeout_seconds       = var.flux_readiness_probe_timeout_seconds
+
+            http_get {
+              path   = var.flux_readiness_probe_http_get_path
+              port   = var.flux_readiness_probe_http_get_port
+              scheme = var.flux_readiness_probe_http_get_scheme
+            }
+          }
+
+          port {
+            container_port = var.container_port
+            host_port      = var.host_port
+            protocol       = var.protocol
+          }
+
+          resources {
+            requests {
+              cpu    = var.container_cpu_request
+              memory = var.container_memory_request
+            }
+            limits {
+              cpu    = var.container_cpu_limit
+              memory = var.container_memory_limit
+            }
+          }
         }
       }
     }

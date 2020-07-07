@@ -66,6 +66,144 @@ variable "flux_deployment_labels" {
   }
 }
 
+variable "flux_liveness_probe_failure_threshold" {
+  description = "The liveness probe failure threhold"
+  type        = number
+  default     = 3
+}
+
+variable "flux_liveness_probe_initial_delay_seconds" {
+  description = "The liveness probe initial delay in seconds"
+  type        = number
+  default     = 5
+}
+
+variable "flux_liveness_probe_period_seconds" {
+  description = "The liveness probe period in seconds"
+  type        = number
+  default     = 10
+}
+
+variable "flux_liveness_probe_success_threshold" {
+  description = "The liveness probe success threhold"
+  type        = number
+  default     = 1
+}
+
+variable "flux_liveness_probe_timeout_seconds" {
+  description = "The liveness probe timeout in seconds"
+  type        = number
+  default     = 5
+}
+
+variable "flux_liveness_probe_http_get_path" {
+  description = "The liveness probe http get path"
+  type        = string
+  default     = "/api/flux/v6/identity.pub"
+}
+
+variable "flux_liveness_probe_http_get_port" {
+  description = "The liveness probe http get port"
+  type        = number
+  default     = 3030
+}
+
+variable "flux_liveness_probe_http_get_scheme" {
+  description = "The liveness probe http get scheme"
+  type        = string
+  default     = "HTTP"
+}
+
+variable "flux_readiness_probe_failure_threshold" {
+  description = "The readiness probe failure threhold"
+  type        = number
+  default     = 3
+}
+
+variable "flux_readiness_probe_initial_delay_seconds" {
+  description = "The readiness probe initial delay in seconds"
+  type        = number
+  default     = 5
+}
+
+variable "flux_readiness_probe_period_seconds" {
+  description = "The readiness probe period in seconds"
+  type        = number
+  default     = 10
+}
+
+variable "flux_readiness_probe_success_threshold" {
+  description = "The readiness probe success threhold"
+  type        = number
+  default     = 1
+}
+
+variable "flux_readiness_probe_timeout_seconds" {
+  description = "The readiness probe timeout in seconds"
+  type        = number
+  default     = 5
+}
+
+variable "flux_readiness_probe_http_get_path" {
+  description = "The readiness probe http get path"
+  type        = string
+  default     = "/api/flux/v6/identity.pub"
+}
+
+variable "flux_readiness_probe_http_get_port" {
+  description = "The readiness probe http get port"
+  type        = number
+  default     = 3030
+}
+
+variable "flux_readiness_probe_http_get_scheme" {
+  description = "The readiness probe http get scheme"
+  type        = string
+  default     = "HTTP"
+}
+
+variable "container_port" {
+  description = "Port to expose on container"
+  type        = number
+  default     = 3030
+}
+
+variable "host_port" {
+  description = "Port to expose on host"
+  type        = number
+  default     = 0
+}
+
+variable "protocol" {
+  description = "Port protocol (must be TCP or UDP)"
+  type        = string
+  default     = "TCP"
+}
+
+variable "container_cpu_request" {
+  description = "How much CPU resource to request"
+  type        = string
+  default     = "250m"
+}
+
+variable "container_cpu_limit" {
+  description = "Upper boundary of CPU resource"
+  type        = string
+  default     = "1"
+}
+
+variable "container_memory_request" {
+  description = "How much memory resource to request"
+  type        = string
+  default     = "1Gi"
+}
+
+variable "container_memory_limit" {
+  description = "Upper boundary of memory resource"
+  type        = string
+  default     = "1Gi"
+}
+
 variable "memcached_docker_tag" {
   description = "Tag of memcached Docker image to pull"
   type        = string
