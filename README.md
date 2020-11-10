@@ -19,19 +19,32 @@ cluster by doing the following things:
 
 ## Usage
 
-Prerequisites:
-
-- `GITHUB_TOKEN` environment variable present with appropriate Github API key
-- AWS region and credentials configured via appropriate `provider` block or
-    environment variables / config file etc
+Providers for GitHub and Kubernetes must be configured before calling the
+module.
 
 ```hcl
-module "flux-bootstrap" {
-  source = "github.com/limejump/terraform-k8s-flux-bootstrap"
+provider "github" {
+  organization = "my-org"
+  base_url     = "https://github.com/my-org"
+}
 
-  eks_cluster_name       = "your-cluster-name-here"
-  github_org_name        = "your-org-name-here"
-  github_repository_name = "your-repo-name-here"
+# Example for an AWS EKS Cluster:
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
+  load_config_file       = false
+}
+
+module "flux-bootstrap" {
+  source = "github.com/limejump/terraform-k8s-flux-bootstrap?ref=vx.y.z"
+
+  github_repository_name = "my-gitops-repo"
+
+  flux_args_extra = {
+      git-path = "foo/bar"
+      git-email = "flux@example.com"
+  }
 }
 ```
 
