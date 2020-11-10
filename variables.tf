@@ -8,6 +8,12 @@ variable "github_repository_branch" {
   default     = "master"
 }
 
+variable "github_deploy_key_title" {
+  description = "Title to use for the deploy key created in GitHub"
+  type = string
+  default = "Flux Deploy Key"
+}
+
 variable "flux_docker_tag" {
   description = "Tag of flux Docker image to pull"
   type        = string
