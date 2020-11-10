@@ -23,9 +23,9 @@ Providers for GitHub and Kubernetes must be configured before calling the
 module.
 
 ```hcl
+# `GITHUB_TOKEN` env var should be set if you don't provide it in here
 provider "github" {
   organization = "my-org"
-  base_url     = "https://github.com/my-org"
 }
 
 # Example for an AWS EKS Cluster:
