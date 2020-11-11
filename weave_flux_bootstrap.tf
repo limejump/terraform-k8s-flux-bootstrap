@@ -195,7 +195,7 @@ resource "kubernetes_deployment" "flux" {
           }
 
           args = concat([
-            "${var.deploy_memcached ? "--memcached-service=memcached" : "--registry-disable-scanning"}",
+            var.deploy_memcached ? "--memcached-service=memcached" : "--registry-disable-scanning",
             "--ssh-keygen-dir=/var/fluxd/keygen",
             "--git-url=${data.github_repository.flux-repo.ssh_clone_url}",
             "--git-branch=${var.github_repository_branch}",
