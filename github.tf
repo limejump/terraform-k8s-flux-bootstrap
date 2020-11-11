@@ -8,7 +8,7 @@ resource "tls_private_key" "flux" {
 }
 
 data "github_repository" "flux-repo" {
-  name = var.github_repository_name
+  full_name = var.github_repository
 }
 
 resource "github_repository_deploy_key" "flux" {

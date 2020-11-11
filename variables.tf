@@ -1,5 +1,5 @@
-variable "github_repository_name" {
-  description = "Name of the Github repository for Flux"
+variable "github_repository" {
+  description = "Name of the Github repository for Flux in owner/repo format."
 }
 
 variable "github_repository_branch" {
