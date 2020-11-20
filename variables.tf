@@ -10,8 +10,14 @@ variable "github_repository_branch" {
 
 variable "github_deploy_key_title" {
   description = "Title to use for the deploy key created in GitHub"
-  type = string
-  default = "Flux Deploy Key"
+  type        = string
+  default     = "Flux Deploy Key"
+}
+
+variable "github_install_deploy_key" {
+  description = "If true (default), add the SSH public key to the specified GitHub repo"
+  type        = bool
+  default     = true
 }
 
 variable "flux_docker_tag" {
