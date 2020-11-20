@@ -19,3 +19,7 @@ resource "github_repository_deploy_key" "flux" {
   read_only  = false
   key        = tls_private_key.flux[0].public_key_openssh
 }
+
+output "public_key_openssh" {
+  value = tls_private_key.flux[0].public_key_openssh
+}
