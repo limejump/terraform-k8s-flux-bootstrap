@@ -8,12 +8,12 @@ resource "tls_private_key" "flux" {
 }
 
 data "github_repository" "flux-repo" {
-  count = github_install_deploy_key == true ? 1 : 0
+  count = var.github_install_deploy_key == true ? 1 : 0
   name  = var.github_repository_name
 }
 
 resource "github_repository_deploy_key" "flux" {
-  count      = var.private_key_pem == null ? (github_install_deploy_key == true ? 1 : 0) : (0)
+  count      = var.private_key_pem == null ? (var.github_install_deploy_key == true ? 1 : 0) : (0)
   title      = var.github_deploy_key_title
   repository = data.github_repository.flux-repo.name
   read_only  = false
