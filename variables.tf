@@ -1,5 +1,11 @@
 variable "github_repository_name" {
   description = "Name of the Github repository for Flux"
+  type        = string
+}
+
+variable "github_repository_owner" {
+  description = "Org or user ID of the repo owner"
+  type        = string
 }
 
 variable "github_repository_branch" {
@@ -18,6 +24,12 @@ variable "github_install_deploy_key" {
   description = "If true (default), add the SSH public key to the specified GitHub repo"
   type        = bool
   default     = true
+}
+
+variable "github_host" {
+  description = "Override this if you use GitHub Enterprise Server (defaults to github.com)"
+  type        = string
+  default     = "github.com"
 }
 
 variable "flux_docker_tag" {
