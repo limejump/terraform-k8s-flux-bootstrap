@@ -3,11 +3,6 @@ variable "github_repository_name" {
   type        = string
 }
 
-variable "github_repository_owner" {
-  description = "Org or user ID of the repo owner"
-  type        = string
-}
-
 variable "github_repository_branch" {
   description = "Branch to use as the upstream GitOps reference"
   type        = string
