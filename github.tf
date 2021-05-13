@@ -1,14 +1,3 @@
-terraform {
-  required_providers {
-    github = {
-      source = "integrations/github"
-    }
-    tls = {
-      source  = "hashicorp/tls"
-    }
-  }
-}
-
 # Generate a keypair. The private key will go to Flux in-cluster, public key
 # will be added as a deploy key to the Github repo.
 

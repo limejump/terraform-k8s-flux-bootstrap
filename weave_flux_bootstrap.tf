@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-    }
-  }
-}
-
 # The cluster will use a GitOps repo for Kubernetes configuration. this file
 # will bootstrap the configuration of Flux such that all the manifests from the
 # repository will be automatically applied when the cluster is created.
