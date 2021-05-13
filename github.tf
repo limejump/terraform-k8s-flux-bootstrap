@@ -3,6 +3,9 @@ terraform {
     github = {
       source = "integrations/github"
     }
+    tls = {
+      source  = "hashicorp/tls"
+    }
   }
 }
 
