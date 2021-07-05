@@ -23,8 +23,6 @@ locals {
     for key in keys(var.flux_args_extra) :
     "--${key}=${var.flux_args_extra[key]}"
   ]
-  staging_memcache_max_item_size = "-I 5m"
-  prod_memcache_max_item_size = "-I 5m"
 }
 
 resource "kubernetes_namespace" "flux" {
@@ -319,7 +317,7 @@ resource "kubernetes_deployment" "memcached" {
             name           = "clients"
             container_port = 11211
           }
-          args = local.staging_memcache_max_size
+          args = "-I ${var.staging_memcache_max_size}"
         }
       }
     }
