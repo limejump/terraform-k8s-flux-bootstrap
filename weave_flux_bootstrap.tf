@@ -317,7 +317,7 @@ resource "kubernetes_deployment" "memcached" {
             name           = "clients"
             container_port = 11211
           }
-          args = "-I ${var.staging_memcache_max_size}"
+          args = "-I ${var.memcache_max_item_size}"
         }
       }
     }
