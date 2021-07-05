@@ -317,6 +317,9 @@ resource "kubernetes_deployment" "memcached" {
             name           = "clients"
             container_port = 11211
           }
+          args = concat([
+            "-I 5m",
+          ],
         }
       }
     }
