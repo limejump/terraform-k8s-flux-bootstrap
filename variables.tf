@@ -62,10 +62,10 @@ variable "deploy_memcached" {
   default     = true
 }
 
-variable "memcache_max_item_size"{
+variable "memcache_max_item_size" {
   description = "the max item size allowed in the staging memcached deployment"
-  type = string
-  default = "5m"
+  type        = string
+  default     = "5m"
 }
 
 variable "flux_deployment_annotations" {
@@ -188,7 +188,7 @@ variable "container_port" {
 variable "host_port" {
   description = "Port to expose on host"
   type        = number
-  default     = 0
+  default     = null
 }
 
 variable "protocol" {

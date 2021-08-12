@@ -236,11 +236,11 @@ resource "kubernetes_deployment" "flux" {
           }
 
           resources {
-            requests {
+            requests = {
               cpu    = var.container_cpu_request
               memory = var.container_memory_request
             }
-            limits {
+            limits = {
               cpu    = var.container_cpu_limit
               memory = var.container_memory_limit
             }
@@ -302,7 +302,7 @@ resource "kubernetes_deployment" "memcached" {
             name           = "clients"
             container_port = 11211
           }
-          args = "-I ${var.memcache_max_item_size}"
+          args = ["-I ${var.memcache_max_item_size}"]
         }
       }
     }
