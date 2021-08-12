@@ -188,7 +188,7 @@ variable "container_port" {
 variable "host_port" {
   description = "Port to expose on host"
   type        = number
-  default     = 0
+  default     = null
 }
 
 variable "protocol" {
