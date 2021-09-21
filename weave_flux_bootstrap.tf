@@ -111,6 +111,9 @@ resource "kubernetes_deployment" "flux" {
   }
 
   spec {
+
+    replicas = 0
+
     selector {
       match_labels = {
         name = "flux"
