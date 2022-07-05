@@ -1,3 +1,6 @@
+NB. This is not used, and should be deleted at some point
+
+
 # terraform-k8s-flux-bootstrap
 
 This Terraform module will bootstrap [Weaveworks Flux][1] on a Kubernetes
